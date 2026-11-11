@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OHLC Viewer</title>
+    <link rel="icon" href="taxak_capital.jpg" type="image/jpeg">
+    <style>
+        * { box-sizing: border-box; }
+        html, body { margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #131722; }
+        #app { display: flex; flex-direction: column; height: 100vh; }
+        #topbar {
+            display: flex; flex-wrap: nowrap; align-items: center; gap: 8px;
+            padding: 8px 12px; background: #fafafa; border-bottom: 1px solid #e3e3e3;
+            position: relative;
+        }
+        #topbar .logo { width: 26px; height: 26px; border-radius: 4px; }
+        #symbol { color: #26a69a; font-weight: bold; margin-right: 4px; }
+        button, input[type="date"], select {
+            background: #ffffff; color: #131722; border: 1px solid #cfcfcf;
+            border-radius: 4px; padding: 5px 10px; font-size: 13px; cursor: pointer;
+        }
+        button:hover { background: #f0f0f0; }
+        button.active { background: #26a69a; color: #ffffff; border-color: #26a69a; }
+        .divider { width: 1px; height: 22px; background: #ddd; margin: 0 4px; }
+        .ind-wrap { position: relative; }
+        #indMenu {
+            position: absolute; top: 100%; left: 0; z-index: 30; margin-top: 4px;
+            background: #ffffff; border: 1px solid #cfcfcf; border-radius: 6px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.12); padding: 6px; min-width: 260px; max-height: 70vh; overflow: auto;
+        }
+        #indMenu.hidden { display: none; }
+        .ind-row { display: flex; align-items: center; gap: 8px; padding: 4px 6px; border-radius: 4px; }
+        .ind-row:hover { background: #f4f4f4; }
+        .ind-row > label { min-width: 110px; cursor: pointer; }
+        .ind-params { font-size: 12px; color: #555; display: inline-flex; gap: 4px; align-items: center; }
+        .ind-params input { width: 52px; padding: 2px 4px; }
+        .ind-params .pl { white-space: nowrap; }
+
+        #views { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: row; }
+        .chart-view { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; border-right: 1px solid #e3e3e3; }
+        .chart-view:last-child { border-right: none; }
+        .cv-head { display: flex; align-items: center; gap: 12px; padding: 4px 10px; background: #fafafa; border-bottom: 1px solid #e3e3e3; }
+        .cv-tflabel { font-size: 12px; font-weight: 700; color: #131722; }
+        .cv-legend { font-size: 12px; display: flex; gap: 10px; margin-left: auto; }
+        .cv-legend b { font-weight: 600; }
+        .up { color: #26a69a; } .down { color: #ef5350; }
+        .cv-chart { flex: 1 1 auto; min-height: 0; width: 100%; }
+
+        #status { padding: 6px 12px; font-size: 12px; color: #6b6b6b; background: #fafafa; border-top: 1px solid #e3e3e3; }
+        .active-view { box-shadow: inset 0 0 0 2px #26a69a; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="topbar">
+            <img class="logo" src="taxak_capital.jpg" alt="">
+            <span id="symbol">—</span>
+            <select id="tfSelect" title="Timeframe"></select>
+            <button id="zoomOutBtn" title="Zoom out (−)">−</button>
+            <button id="zoomInBtn" title="Zoom in (+)">+</button>
+            <button id="resetBtn" title="Reset zoom (0)">Reset</button>
+            <span class="ind-wrap">
+                <button id="indBtn" title="Indicators">Indicators ▾</button>
+                <div id="indMenu" class="hidden"></div>
+            </span>
+            <span class="divider"></span>
+            <button id="prevBtn" title="Previous (←)">‹ Prev</button>
+            <input type="date" id="dateInput" />
+            <button id="nextBtn" title="Next (→)">Next ›</button>
+            <span class="divider"></span>
+            <button id="splitBtn" title="Split screen (compare timeframes)">▣ Split</button>
+            <button id="linkBtn" title="Link panes: keep chart centres aligned while panning (Split mode)">Link</button>
+        </div>
+
+        <div id="views"></div>
+
+        <div id="status"></div>
+    </div>
+
+    <script src="lightweight-charts.standalone.production.js"></script>
+    <script src="indicators/util.js"></script>
+    <script src="indicators/ema.js"></script>
+    <script src="indicators/kalman.js"></script>
+    <script src="indicators/bollinger.js"></script>
+    <script src="indicators/rsi.js"></script>
+    <script src="indicators/macd.js"></script>
+    <script src="indicators/stochastic.js"></script>
+    <script src="indicators/atr.js"></script>
+    <script src="indicators/harmonic.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
